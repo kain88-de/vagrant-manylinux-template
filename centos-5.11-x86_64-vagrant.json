@@ -1,0 +1,55 @@
+{
+    "variables": {
+        "user": "vagrant",
+        "password": "vagrant",
+        "disk_size": "100000"
+    },
+
+    "builders":
+    [
+        {
+            "name": "centos-5.11-x86_64-vagrant",
+
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "disk_size": "{{ user `disk_size`}}",
+
+            "iso_url": "http://mirror.eu.oneandone.net/linux/distributions/centos/5.11/isos/x86_64/CentOS-5.11-x86_64-netinstall.iso",
+            "iso_checksum": "f2087f9af0d50df05144a1f0d1c5b404",
+            "iso_checksum_type": "md5",
+
+            "http_directory": "http",
+
+            "ssh_username": "{{user `user`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "60m",
+            "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -P now",
+
+            "boot_wait": "2s",
+            "boot_command": [
+               "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-rhel-osl-5.cfg<enter><wait>"   
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+                "scripts/update.sh",
+                "scripts/vagrant.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "keep_input_artifact": false,
+            "output": "box/centos-5.11_x86_64-server.box",
+            "type": "vagrant"
+        }
+    ]
+}
