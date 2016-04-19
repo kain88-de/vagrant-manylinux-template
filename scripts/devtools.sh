@@ -1,5 +1,23 @@
 #!/bin/bash
 
+function check_var {
+    if [ -z "$1" ]; then
+        echo "required variable not defined"
+        exit 1
+    fi
+}
+
+function check_sha256sum {
+    local fname=$1
+    check_var ${fname}
+    local sha256=$2
+    check_var ${sha256}
+
+    echo "${sha256}  ${fname}" > ${fname}.sha256
+    sha256sum -c ${fname}.sha256
+    rm ${fname}.sha256
+}
+
 EPEL_RPM_HASH=0dcc89f9bf67a2a515bad64569b7a9615edc5e018f676a578d5fd0f17d3c81d4
 DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
 
@@ -7,13 +25,7 @@ DEVTOOLS_HASH=a8ebeb4bed624700f727179e6ef771dafe47651131a00a78b342251415646acc
 # the final image after compiling Python
 PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel"
 
-# Get build utilities
-# TODO: ship this in the packer build directly
-wget https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/build_utils.sh
-source build_utils.sh
-
 # EPEL support
-yum -y install wget curl
 curl -sLO https://dl.fedoraproject.org/pub/epel/5/x86_64/epel-release-5-4.noarch.rpm
 check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
 
@@ -31,3 +43,7 @@ yum -y install bzip2 make git patch unzip bison yasm diffutils \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
     ${PYTHON_COMPILE_DEPS}
+
+echo `yum repolist`
+echo `ls`
+echo `ls /etc/yum.repos.d`
