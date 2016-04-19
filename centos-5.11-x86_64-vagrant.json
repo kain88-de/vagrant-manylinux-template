@@ -41,6 +41,7 @@
             "scripts": [
                 "scripts/update.sh",
                 "scripts/vagrant.sh",
+                "scripts/devtools.sh",
                 "scripts/cleanup.sh"
             ]
         }
