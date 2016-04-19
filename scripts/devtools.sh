@@ -38,12 +38,8 @@ rm -f epel-release-5*.rpm
 
 # Development tools and libraries
 yum -y install bzip2 make git patch unzip bison yasm diffutils \
-    autoconf automake which file \
+    autoconf automake which file gcc gcc-gfortran \
     kernel-devel-`uname -r` \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
     ${PYTHON_COMPILE_DEPS}
-
-echo `yum repolist`
-echo `ls`
-echo `ls /etc/yum.repos.d`
