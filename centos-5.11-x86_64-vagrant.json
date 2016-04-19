@@ -24,7 +24,8 @@
             "ssh_username": "{{user `user`}}",
             "ssh_password": "{{user `password`}}",
             "ssh_wait_timeout": "60m",
-            "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -P now",
+            "shutdown_command": "echo '{{user `password`}}'|sudo -S /sbin/shutdown -P now",
+            "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
 
             "boot_wait": "2s",
             "boot_command": [
