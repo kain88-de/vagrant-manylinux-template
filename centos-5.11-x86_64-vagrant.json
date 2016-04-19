@@ -49,7 +49,7 @@
     "post-processors": [
         {
             "keep_input_artifact": false,
-            "output": "box/centos-5.11_x86_64-server.box",
+            "output": "box/centos-manylinux.box",
             "type": "vagrant"
         }
     ]
