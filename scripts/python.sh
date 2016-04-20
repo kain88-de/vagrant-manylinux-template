@@ -1,9 +1,8 @@
 #!/bin/bash
 
-yum -y install curl
-
 # Python versions to be installed in /opt/$VERSION_NO
-CPYTHON_VERSIONS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
+# CPYTHON_VERSIONS="2.6.9 2.7.11 3.3.6 3.4.4 3.5.1"
+CPYTHON_VERSIONS="2.7.11 3.5.1"
 
 # openssl version to build, with expected sha256 hash of .tar.gz
 # archive
@@ -17,15 +16,15 @@ PYTHON_COMPILE_DEPS="zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-
 # Libraries that are allowed as part of the manylinux1 profile
 MANYLINUX1_DEPS="glibc-devel libstdc++-devel glib2-devel libX11-devel libXext-devel libXrender-devel  mesa-libGL-devel libICE-devel libSM-devel ncurses-devel"
 
-
+MY_DIR=$(dirname "${BASH_SOURCE[0]}")
+echo $MY_DIR
 
 # Get build utilities
 # TODO: ship this in the packer build directly
-curl -sLO https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/build_utils.sh
-curl -sLO https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/manylinux1-check.py
-curl -sLO https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/python-tag-abi-tag.py
+curl -sL https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/build_utils.sh > $MY_DIR/build_utils.sh
+curl -sL https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/manylinux1-check.py > $MY_DIR/manylinux1-check.py
+curl -sL https://raw.githubusercontent.com/pypa/manylinux/master/docker/build_scripts/python-tag-abi-tag.py > $MY_DIR/python-tag-abi-tag.py
 
-MY_DIR=$(dirname "${BASH_SOURCE[0]}")
 source $MY_DIR/build_utils.sh
 
 # Compile the latest Python releases.
@@ -38,11 +37,11 @@ build_cpythons $CPYTHON_VERSIONS
 rm -rf /usr/local/ssl
 
 # Install patchelf and auditwheel (latest with unreleased bug fixes)
-curl -sLO https://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz
-check_sha256sum patchelf-0.9njs2.tar.gz $PATCHELF_HASH
-tar -xzf patchelf-0.9njs2.tar.gz
-(cd patchelf-0.9njs2 && ./configure && make && make install)
-rm -rf patchelf-0.9njs2.tar.gz patchelf-0.9njs2
+curl -sL https://nipy.bic.berkeley.edu/manylinux/patchelf-0.9njs2.tar.gz > $MY_DIR/patchelf-0.9njs2.tar.gz
+check_sha256sum $MY_DIR/patchelf-0.9njs2.tar.gz $PATCHELF_HASH
+tar -xzf $MY_DIR/patchelf-0.9njs2.tar.gz
+(cd $MY_DIR/patchelf-0.9njs2 && ./configure && make && make install)
+rm -rf $MY_DIR/patchelf-0.9njs2.tar.gz patchelf-0.9njs2
 
 PY35_BIN=/opt/python/cp35-cp35m/bin
 $PY35_BIN/pip install auditwheel
