@@ -32,18 +32,18 @@ check_sha256sum epel-release-5-4.noarch.rpm $EPEL_RPM_HASH
 curl -sLO http://people.centos.org/tru/devtools-2/devtools-2.repo
 check_sha256sum devtools-2.repo $DEVTOOLS_HASH
 mv devtools-2.repo /etc/yum.repos.d/devtools-2.repo
-rpm -Uvh --replacepkgs epel-release-5*.rpm
+sudo rpm -Uvh --replacepkgs epel-release-5*.rpm
 rm -f epel-release-5*.rpm
 
 # Development tools and libraries
-yum -y install bzip2 make git patch unzip bison yasm diffutils \
+sudo yum -y install bzip2 make git patch unzip bison yasm diffutils \
     autoconf automake which file gcc gcc-c++ gcc-gfortran \
     kernel-devel-`uname -r` \
     devtoolset-2-binutils devtoolset-2-gcc \
     devtoolset-2-gcc-c++ devtoolset-2-gcc-gfortran \
     ${MANYLINUX1_DEPS}
 
-yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
+sudo yum -y erase wireless-tools gtk2 libX11 hicolor-icon-theme \
     avahi freetype bitstream-vera-fonts > /dev/null 2>&1
 
-yum -y clean all > /dev/null 2>&1
+sudo yum -y clean all > /dev/null 2>&1

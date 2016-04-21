@@ -31,12 +31,10 @@
         {
             "type": "shell",
             "skip_clean": "true",
-            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
             "scripts": [
-                "scripts/update.sh",
                 "scripts/vagrant.sh",
-                "scripts/devtools.sh",
                 "scripts/cleanup.sh",
+                "scripts/devtools.sh",
                 "scripts/miniconda.sh"
             ]
         }
