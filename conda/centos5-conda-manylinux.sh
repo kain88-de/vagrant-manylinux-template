@@ -23,7 +23,7 @@
             "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
             "boot_wait": "2s",
             "boot_command": [
-               "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-rhel-osl-5.cfg<enter><wait>"
+               "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos5-minimal.cfg<enter><wait>"
             ]
         }
     ],
