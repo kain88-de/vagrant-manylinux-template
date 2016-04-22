@@ -39,7 +39,6 @@
         {
             "type": "shell",
             "scripts": [
-                "scripts/devtools.sh",
                 "scripts/miniconda.sh"
             ]
         }
