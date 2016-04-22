@@ -30,10 +30,15 @@
     "provisioners": [
         {
             "type": "shell",
-            "skip_clean": "true",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
             "scripts": [
                 "scripts/vagrant.sh",
-                "scripts/cleanup.sh",
+                "scripts/cleanup.sh"
+            ]
+        },
+        {
+            "type": "shell",
+            "scripts": [
                 "scripts/devtools.sh",
                 "scripts/miniconda.sh"
             ]
