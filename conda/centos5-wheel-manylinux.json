@@ -1,0 +1,58 @@
+{
+    "variables": {
+        "user": "vagrant",
+        "password": "vagrant",
+        "disk_size": "100000"
+    },
+    "builders":
+    [
+        {
+            "name": "centos-5.11-x86_64-vagrant",
+            "type": "qemu",
+            "format": "qcow2",
+            "accelerator": "kvm",
+            "disk_size": "{{ user `disk_size`}}",
+            "iso_url": "http://mirror.eu.oneandone.net/linux/distributions/centos/5.11/isos/x86_64/CentOS-5.11-x86_64-netinstall.iso",
+            "iso_checksum": "f2087f9af0d50df05144a1f0d1c5b404",
+            "iso_checksum_type": "md5",
+            "http_directory": "http",
+            "ssh_username": "{{user `user`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "60m",
+            "shutdown_command": "echo '{{user `password`}}'|sudo -S /sbin/shutdown -P now",
+            "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S sh 'shutdown.sh'",
+            "boot_wait": "2s",
+            "boot_command": [
+               "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks-centos5-minimal.cfg<enter><wait>"
+            ]
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+                "scripts/vagrant.sh",
+                "scripts/cleanup.sh"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "scripts/wheel-scripts/",
+            "destination": "/home/vagrant"
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/wheel.sh"
+            ]
+        }
+    ],
+    "post-processors": [
+        {
+            "keep_input_artifact": false,
+            "output": "box/centos-manylinux-wheel.box",
+            "type": "vagrant"
+        }
+    ]
+}
